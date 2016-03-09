@@ -19,6 +19,7 @@
     //     // echo $x.'<br>';
     // }
     // echo (hex2bin($x)).'<br>';
+    
     //method3
     for(;$r>1;$r-=1){
         
