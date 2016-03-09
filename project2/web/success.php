@@ -2,7 +2,11 @@
 <html>
     <head>
         <style>
+            
+		@import url(//fonts.googleapis.com/css?family=Exo:100,200,400);
+		@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
 
+            
             h1 {
                 text-align: center;
             }
@@ -11,14 +15,11 @@
                 color:red;
             }
             #div1 {
-                margin-top: -25px;
+                margin-top: -20px;
                 margin-bottom:-10px;
                 margin-left:-10px;
                 margin-right:-10px;
-                text-align: center;
                 background:#F5F5DC;
-                /*width:100%;*/
-                height: 100%
             }
             #div2 {
                 margin-top: 20px;
@@ -29,11 +30,12 @@
                 right: 0;
                 top: 30%;
                 transform: translate(0, -50%);
+                font-family: 'Exo', sans-serif;
+			
             }
             body{
                 /*background:url(http://ginva.com/wp-content/uploads/2012/07/city-skyline-wallpapers-008.jpg);*/
-            
-			width: auto;
+            width: auto;
 			height: auto;
 			background-image: url(http://www.freecreatives.com/wp-content/uploads/2015/03/Huge-Backgrounds-41-1024x683.jpg);
 			background-size: cover;
@@ -42,22 +44,24 @@
             }
             
         </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     </head>
     <body>
         <div id='div1' >
-        <h1>Web Secure-CPEG670</h1>
         <h2>
         <?php
-        
             session_start();
             if($_SESSION['username']!=null)
-            echo "Welcome! ".$_SESSION["username"];
-            
+                echo "Welcome! ".$_SESSION["username"];
+            else {
+                header("Location: login.html");
+            }
         ?>
+        
+        <button onclick="logout()" >Logout!</button>
         </h2>
         
         </div>
-        <hr>
         <div id='div2'>
         <span>Want to change your password?&nbsp;</span>
         <button onclick="change_password()" >Click me!</button>
@@ -77,7 +81,7 @@
             confirm_password.onkeyup = validatePassword;
             
             function change_password(){
-               document.getElementById('change_password').style.display="block";
+               $('#change_password').toggle();
             }
             
             function validatePassword() {
@@ -87,7 +91,16 @@
                 confirm_password.setCustomValidity('');
               }
             }
-            
+            function logout(){
+                $.post( "logout.php", function( data ) {
+                        var r=$.parseJSON(data);
+                        if(r.status=='success'){
+                            location.reload();
+                        }else{
+                            alert('error');
+                        }
+                });
+            }
         </script>
     </body>
 </html>
