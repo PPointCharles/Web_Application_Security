@@ -48,8 +48,11 @@
         <h1>Web Secure-CPEG670</h1>
         <h2>
         <?php
+        
             session_start();
+            if($_SESSION['username']!=null)
             echo "Welcome! ".$_SESSION["username"];
+            
         ?>
         </h2>
         

@@ -5,8 +5,8 @@
     // echo $newpw;
     
     include 'hash_methods.php';
-    
-    $username=$_SESSION['username'];
+    if($_SESSION['username']!=null){
+        $username=$_SESSION['username'];
     $salt = openssl_random_pseudo_bytes(40, $was_strong);
     $pwd =$_POST['password'];// no need to store
     $r=2000;
@@ -24,5 +24,8 @@
                                     //  VALUES('".$username."','".$secure_pwd."','".bin2hex($salt)."','".$r."')");
     $statement->execute();
     $results = $statement->fetch(PDO::FETCH_ASSOC);
+    $_SESSION['username']=null;
     header("Location: login.html?password_reset=1");
+    }else
+    header("Location: login.html?password_reset=0");
 ?>

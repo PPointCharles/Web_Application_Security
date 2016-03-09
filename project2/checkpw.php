@@ -2,7 +2,7 @@
 function getpassword(){
     $hash='72ab994fa2eb426c051ef59cad617750bfe06d7cf6311285ff79c19c32afd236';
     $files1 = scandir('./SecLists/Passwords');
-    $passwd="1q2w3e4r\n";
+    // $passwd="1q2w3e4r\n";
     foreach($files1 as $x){
         if (strpos($x, '.txt')){
             print($x).'<br>';
