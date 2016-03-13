@@ -10,8 +10,8 @@
     $dbhandle = new PDO("sqlite:user.sqlite") or die("Failed to open DB");
     if (!$dbhandle) die ($error);
     
-    // print("SELECT username from user WHERE username='".$username."'");
-    $statement = $dbhandle->prepare("SELECT username from user WHERE username='".$username."'");
+    $statement = $dbhandle->prepare("SELECT salt,stretch,hash FROM user WHERE username=:username");
+    $statement->bindParam(":username", $username,PDO::PARAM_STR);
     $statement->execute();
     $results1 = $statement->fetch(PDO::FETCH_ASSOC);
     
@@ -24,11 +24,11 @@
       $statement->execute();
       $results2 = $statement->fetch(PDO::FETCH_ASSOC);
     //   echo json_encode($results2);
-        print("success");
+        // print("success");
         header("Location: login.html?register_success=1");
     }
     else{
-        print('user exist');
+        // print('user exist');
         header("Location: register.html?register_success=0");
     }
 ?>

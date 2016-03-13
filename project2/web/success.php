@@ -51,6 +51,19 @@
         <h2>
         <?php
             session_start();
+            if(!$_SESSION['ip']){
+                $_SESSION['ip']= $_SERVER['REMOTE_ADDR']; 
+            }
+            else{
+                $x=explode('.',$_SESSION['ip']);
+                $y=explode('.',$_SERVER['REMOTE_ADDR']);
+                if(!($x[0]==$y[0] and $x[1]==$y[1] and $x[2]==$y[2]) ){
+                    
+                    $_SESSION['username']=null;
+                    $_SESSION["logged_in"] = false;
+                    header("Location: login.html");
+                }
+            }
             if($_SESSION['username']!=null)
                 echo "Welcome! ".$_SESSION["username"];
             else {

@@ -15,13 +15,9 @@
     $dbhandle = new PDO("sqlite:user.sqlite") or die("Failed to open DB");
     if (!$dbhandle) die ($error);
     
-    // print("UPDATE user 
-    //         SET hash='".$secure_pwd."', salt='".bin2hex($salt)."',stretch='".$r."'"
-    //         ."WHERE username='".$username."'");
     $statement = $dbhandle->prepare("UPDATE user 
             SET hash='".$secure_pwd."', salt='".bin2hex($salt)."',stretch='".$r."'"
             ."WHERE username='".$username."'");
-                                    //  VALUES('".$username."','".$secure_pwd."','".bin2hex($salt)."','".$r."')");
     $statement->execute();
     $results = $statement->fetch(PDO::FETCH_ASSOC);
     $_SESSION['username']=null;

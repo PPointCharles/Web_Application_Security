@@ -8,8 +8,8 @@
    
    $dbhandle = new PDO("sqlite:user.sqlite") or die("Failed to open DB");
    if (!$dbhandle) die ($error);
-   $statement = $dbhandle->prepare("SELECT salt,stretch,hash FROM user WHERE username='".$username."'");
-   // $statement->bindParam(":username", $username);
+   $statement = $dbhandle->prepare("SELECT salt,stretch,hash FROM user WHERE username=:username");
+   $statement->bindParam(":username", $username,PDO::PARAM_STR);
    $statement->execute();
    $results = $statement->fetch(PDO::FETCH_ASSOC);
    // echo ($results);
