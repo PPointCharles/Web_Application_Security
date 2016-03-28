@@ -5,111 +5,95 @@
             
 		@import url(//fonts.googleapis.com/css?family=Exo:100,200,400);
 		@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
-
-            
-            h1 {
-                text-align: center;
-            }
-            h2 {
-                text-align: right;
-                color:red;
-            }
-            #div1 {
-                margin-top: -20px;
-                margin-bottom:-10px;
-                margin-left:-10px;
-                margin-right:-10px;
-                background:#F5F5DC;
-            }
-            #div2 {
-                margin-top: 20px;
-                text-align: center;
-                /*border:50px;*/
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 30%;
-                transform: translate(0, -50%);
-                font-family: 'Exo', sans-serif;
-			
-            }
-            body{
-                /*background:url(http://ginva.com/wp-content/uploads/2012/07/city-skyline-wallpapers-008.jpg);*/
-            width: auto;
-			height: auto;
-			background-image: url(http://www.freecreatives.com/wp-content/uploads/2015/03/Huge-Backgrounds-41-1024x683.jpg);
-			background-size: cover;
-			
-			z-index: 0;
-            }
             
         </style>
+        <link rel="stylesheet" type="text/css" href="style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <meta name="google-signin-client_id" content="407701602385-q005efm7k49t4up3mjbeu55p0in6lkon.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    
     </head>
     <body>
-        <div id='div1' >
+        
+        <div id='div1'>
         <h2>
         <?php
             session_start();
-            if(!$_SESSION['ip']){
-                $_SESSION['ip']= $_SERVER['REMOTE_ADDR']; 
+            if(($_GET['type']=='google')){
+                $_SESSION['username']=$_GET['name'];
+                $_SESSION['type']='google';
             }
-            else{
-                $x=explode('.',$_SESSION['ip']);
-                $y=explode('.',$_SERVER['REMOTE_ADDR']);
-                if(!($x[0]==$y[0] and $x[1]==$y[1] and $x[2]==$y[2]) ){
-                    
-                    $_SESSION['username']=null;
-                    $_SESSION["logged_in"] = false;
+            {
+                if(!$_SESSION['ip']){
+                    $_SESSION['ip']= $_SERVER['REMOTE_ADDR']; 
+                }
+                else{
+                    $x=explode('.',$_SESSION['ip']);
+                    $y=explode('.',$_SERVER['REMOTE_ADDR']);
+                    if(!($x[0]==$y[0] and $x[1]==$y[1] and $x[2]==$y[2]) ){
+                        
+                        $_SESSION['username']=null;
+                        $_SESSION["logged_in"] = false;
+                        header("Location: login.html");
+                    }
+                }
+                if($_SESSION['username']!=null)
+                    echo "Welcome! ".$_SESSION["username"];
+                else {
                     header("Location: login.html");
                 }
-            }
-            if($_SESSION['username']!=null)
-                echo "Welcome! ".$_SESSION["username"];
-            else {
-                header("Location: login.html");
             }
         ?>
         
         <button onclick="logout()" >Logout!</button>
         </h2>
+        </div>
         
-        </div>
         <div id='div2'>
-        <span>Want to change your password?&nbsp;</span>
-        <button onclick="change_password()" >Click me!</button>
-        <br><br>
-        <form id='change_password' style="display: none;" action="change_password.php" method="post">
-            <input type="password" placeholder="Set New Password" name="password" id="password" required>
-            <input type="password" placeholder="Confirm Password" id="confirm_password" required>
-            <input type="submit" value="Submit"/>
-        </form>
+        <span>Want to change your password?&nbsp;</span><br>
+        <?php
+            if ($_GET['type']=='google'){
+                echo "Google user don't need to use password";
+            }
+            else{
+                echo "<button onclick=change_password()>Click me!</button>";
+            }
+        ?>
         </div>
-        <script type="text/javascript" >
-            
-            var password = document.getElementById("password"),
-                confirm_password = document.getElementById("confirm_password");
-            
-            password.onchange = validatePassword;
-            confirm_password.onkeyup = validatePassword;
-            
+        
+        
+        
+        <script>
             function change_password(){
-               $('#change_password').toggle();
+                window.location.href = "change_password.php";
             }
             
-            function validatePassword() {
-              if (password.value != confirm_password.value) {
-                confirm_password.setCustomValidity("Passwords Don't Match");
-              } else {
-                confirm_password.setCustomValidity('');
-              }
+            function signOut() {
+              var auth2 = gapi.auth2.getAuthInstance();
+              auth2.signOut().then(function () {
+                console.log('User signed out.');
+              });
             }
+        
+            function onLoad() {
+              gapi.load('auth2', function() {
+                gapi.auth2.init();
+              });
+            }
+        </script>
+        
+        <script type="text/javascript" >
+   
             function logout(){
-                $.post( "logout.php", function( data ) {
+                signOut();
+            
+                $.post( "OP_logout.php", function( data ) {
                         var r=$.parseJSON(data);
                         if(r.status=='success'){
-                            location.reload();
-                        }else{
+                            window.location.href = "login.html";
+                        }
+                        
+                        else{
                             alert('error');
                         }
                 });
